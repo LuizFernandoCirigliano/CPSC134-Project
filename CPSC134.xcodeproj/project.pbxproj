@@ -12,9 +12,15 @@
 		3A8622371C06A5E8002A113E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A8622351C06A5E8002A113E /* Main.storyboard */; };
 		3A8622391C06A5E8002A113E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A8622381C06A5E8002A113E /* Assets.xcassets */; };
 		3A86223C1C06A5E8002A113E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A86223A1C06A5E8002A113E /* LaunchScreen.storyboard */; };
+		3A8622441C06A6E8002A113E /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8622431C06A6E8002A113E /* NetworkManager.swift */; };
+		3A8622461C06EAB9002A113E /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8622451C06EAB9002A113E /* PlayerViewController.swift */; };
+		3A8622481C06EFA2002A113E /* TCPNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8622471C06EFA2002A113E /* TCPNetworkManager.swift */; };
+		3A86224A1C06EFAB002A113E /* UDPNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8622491C06EFAB002A113E /* UDPNetworkManager.swift */; };
+		CD99F4F0D409E1C1BFDD985A /* Pods_CPSC134.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9D48C46A9C87B8EA6FC7BA /* Pods_CPSC134.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		038D339E3648D89B64FCAFBD /* Pods-CPSC134.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CPSC134.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CPSC134/Pods-CPSC134.debug.xcconfig"; sourceTree = "<group>"; };
 		3A86222E1C06A5E8002A113E /* CPSC134.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CPSC134.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A8622311C06A5E8002A113E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3A8622331C06A5E8002A113E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +28,12 @@
 		3A8622381C06A5E8002A113E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3A86223B1C06A5E8002A113E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3A86223D1C06A5E8002A113E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A8622431C06A6E8002A113E /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		3A8622451C06EAB9002A113E /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
+		3A8622471C06EFA2002A113E /* TCPNetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPNetworkManager.swift; sourceTree = "<group>"; };
+		3A8622491C06EFAB002A113E /* UDPNetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UDPNetworkManager.swift; sourceTree = "<group>"; };
+		54C5C30AD5F7132FA2EB07C5 /* Pods-CPSC134.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CPSC134.release.xcconfig"; path = "Pods/Target Support Files/Pods-CPSC134/Pods-CPSC134.release.xcconfig"; sourceTree = "<group>"; };
+		DE9D48C46A9C87B8EA6FC7BA /* Pods_CPSC134.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CPSC134.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD99F4F0D409E1C1BFDD985A /* Pods_CPSC134.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +53,8 @@
 			children = (
 				3A8622301C06A5E8002A113E /* CPSC134 */,
 				3A86222F1C06A5E8002A113E /* Products */,
+				F64A0AD8955ECFD68DA7CAEF /* Pods */,
+				C64AE840916FFD673AB730E6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,12 +71,33 @@
 			children = (
 				3A8622311C06A5E8002A113E /* AppDelegate.swift */,
 				3A8622331C06A5E8002A113E /* ViewController.swift */,
+				3A8622451C06EAB9002A113E /* PlayerViewController.swift */,
+				3A8622431C06A6E8002A113E /* NetworkManager.swift */,
+				3A8622471C06EFA2002A113E /* TCPNetworkManager.swift */,
+				3A8622491C06EFAB002A113E /* UDPNetworkManager.swift */,
 				3A8622351C06A5E8002A113E /* Main.storyboard */,
 				3A8622381C06A5E8002A113E /* Assets.xcassets */,
 				3A86223A1C06A5E8002A113E /* LaunchScreen.storyboard */,
 				3A86223D1C06A5E8002A113E /* Info.plist */,
 			);
 			path = CPSC134;
+			sourceTree = "<group>";
+		};
+		C64AE840916FFD673AB730E6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DE9D48C46A9C87B8EA6FC7BA /* Pods_CPSC134.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F64A0AD8955ECFD68DA7CAEF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				038D339E3648D89B64FCAFBD /* Pods-CPSC134.debug.xcconfig */,
+				54C5C30AD5F7132FA2EB07C5 /* Pods-CPSC134.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -71,9 +107,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3A8622401C06A5E8002A113E /* Build configuration list for PBXNativeTarget "CPSC134" */;
 			buildPhases = (
+				9D8B41BB40D92B54605305A2 /* Check Pods Manifest.lock */,
 				3A86222A1C06A5E8002A113E /* Sources */,
 				3A86222B1C06A5E8002A113E /* Frameworks */,
 				3A86222C1C06A5E8002A113E /* Resources */,
+				09FE30B21F4C14CADAF0FF48 /* Embed Pods Frameworks */,
+				4C42C5AFF12DA77623822D23 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -130,13 +169,65 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		09FE30B21F4C14CADAF0FF48 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CPSC134/Pods-CPSC134-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4C42C5AFF12DA77623822D23 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CPSC134/Pods-CPSC134-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9D8B41BB40D92B54605305A2 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		3A86222A1C06A5E8002A113E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A8622441C06A6E8002A113E /* NetworkManager.swift in Sources */,
+				3A8622461C06EAB9002A113E /* PlayerViewController.swift in Sources */,
+				3A86224A1C06EFAB002A113E /* UDPNetworkManager.swift in Sources */,
 				3A8622341C06A5E8002A113E /* ViewController.swift in Sources */,
 				3A8622321C06A5E8002A113E /* AppDelegate.swift in Sources */,
+				3A8622481C06EFA2002A113E /* TCPNetworkManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,6 +336,7 @@
 		};
 		3A8622411C06A5E8002A113E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 038D339E3648D89B64FCAFBD /* Pods-CPSC134.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = CPSC134/Info.plist;
@@ -256,6 +348,7 @@
 		};
 		3A8622421C06A5E8002A113E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 54C5C30AD5F7132FA2EB07C5 /* Pods-CPSC134.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = CPSC134/Info.plist;
@@ -284,6 +377,7 @@
 				3A8622421C06A5E8002A113E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
