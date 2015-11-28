@@ -11,6 +11,7 @@ import UIKit
 class PlayerViewController: UIViewController {
     var lastNote = 72
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -33,15 +34,22 @@ class PlayerViewController: UIViewController {
         }
         
         let noteChange = Int(yTrans/24.0)
-        print(noteChange)
-        let myNote = lastNote + noteChange
+        let myNote = 72 + noteChange
+        
         if myNote != lastNote {
             lastNote = myNote
-            print(lastNote)
             NetworkManager.sharedManager.sendNote(lastNote)
         }
     }
 
+    @IBAction func didTap(sender: UITapGestureRecognizer) {
+        let position = sender.locationInView(self.view);
+        let y = self.view.frame.size.height - position.y;
+        
+        let note = Int((40 + y*60/self.view.frame.size.height));
+    
+        NetworkManager.sharedManager.sendNote(note);
+    }
     /*
     // MARK: - Navigation
 

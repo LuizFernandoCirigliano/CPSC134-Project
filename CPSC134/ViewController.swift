@@ -28,6 +28,7 @@ class ViewController: UIViewController, NetworkConnectionDelegate {
         let address = self.addressTextField.text ?? ""
         let port = self.portTextField.text ?? ""
         
+        
         guard !address.isEmpty else {
             displayErrorMessage("Please add a valid server address.")
             return;
