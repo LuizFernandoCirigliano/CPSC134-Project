@@ -9,7 +9,7 @@
 import UIKit
 
 
-class ViewController: UIViewController, NetworkConnectionDelegate {
+class ViewController: UIViewController, NetworkConnectionDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var portTextField: UITextField!
     @IBOutlet weak var addressTextField: UITextField!
@@ -17,6 +17,8 @@ class ViewController: UIViewController, NetworkConnectionDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        self.portTextField.delegate = self
+        self.addressTextField.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -70,6 +72,11 @@ class ViewController: UIViewController, NetworkConnectionDelegate {
     
     func didNotConnect() {
         displayErrorMessage("Unable to Connect")
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true;
     }
 }
 

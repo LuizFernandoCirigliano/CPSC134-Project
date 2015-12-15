@@ -10,19 +10,53 @@ import UIKit
 import SnapKit
 
 class PlayerViewController: UIViewController {
-    var lastBassNote = 72
-    var lastMelodyNote = 72
-    var leftView = UIView()
-    var rightView = UIView()
+    var lastBassNote = 72 {
+        didSet {
+            leftLabel.text = noteStringForPitch(lastBassNote)
+        }
+    }
+    var lastMelodyNote = 72 {
+        didSet {
+            rightLabel.text = noteStringForPitch(lastMelodyNote)
+        }
+    }
+    
+    //Layout setup
+    let leftView:UIView = {
+        let theView = UIView()
+        theView.backgroundColor = UIColor.redColor()
+        return theView
+    }()
+    let rightView:UIView = {
+        let theView = UIView()
+        theView.backgroundColor = UIColor.blueColor()
+        return theView
+    }()
+    
+    let leftLabel:UILabel = {
+        let theLabel = UILabel()
+        theLabel.font = UIFont(name: "Didot", size: 60.0)
+        return theLabel
+    }()
+    
+    let rightLabel:UILabel = {
+        let theLabel = UILabel()
+        theLabel.font = UIFont(name: "Didot", size: 60.0)
+        return theLabel
+    }()
+    
+    let pitchLetters = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+    
+    //Convert a pitch number to Letter + Octave representation
+    func noteStringForPitch(pitchNumber: Int!) -> String {
+        let pitchClass = pitchLetters[pitchNumber % 12]
+        let octave = (pitchNumber + 3)/12
+        
+        return "\(pitchClass)\(octave)"
+    }
     
     func configureGestures() {
-        //Initialize 2 child UIViews to split the screen in half
-        self.leftView = UIView(frame: self.view.frame)
-        leftView.backgroundColor = UIColor.redColor()
         self.view.addSubview(leftView)
-        
-        self.rightView = UIView(frame: self.view.frame)
-        rightView.backgroundColor = UIColor.blueColor()
         self.view.addSubview(rightView)
         
         //Set the frame of the 2 subviews
@@ -38,6 +72,20 @@ class PlayerViewController: UIViewController {
             make.left.equalTo(self.view.snp_centerX);
             make.right.equalTo(self.view.snp_right);
             make.bottom.equalTo(self.view.snp_bottom);
+        }
+        
+        //Add the visual feedback labels to each view
+        leftLabel.textColor = UIColor.whiteColor()
+        rightLabel.textColor = UIColor.whiteColor()
+        
+        leftView.addSubview(leftLabel)
+        rightView.addSubview(rightLabel)
+        
+        leftLabel.snp_makeConstraints { (make) -> Void in
+            make.center.equalTo(leftView)
+        }
+        rightLabel.snp_makeConstraints { (make) -> Void in
+            make.center.equalTo(rightView)
         }
         
         //Add pan and tap gesture recognizers to the left(bass) side of the screen
@@ -76,20 +124,20 @@ class PlayerViewController: UIViewController {
             yTranslation = -480
         }
         
-        let noteChange = Int(yTranslation/24.0)
+        let noteChange = Int(yTranslation/48.0)
         
         //If the touch happened on the left side the notes are lower than the right side
         if sender.view == self.leftView {
             let myNote = 48 + noteChange
-            if myNote != lastBassNote {
-                lastBassNote = myNote
-                NetworkManager.sharedManager.sendNote(lastBassNote)
+            if myNote != self.lastBassNote {
+                self.lastBassNote = myNote
+                NetworkManager.sharedManager.sendNote(self.lastBassNote)
             }
         } else {
             let myNote = 72 + noteChange
-            if myNote != lastMelodyNote {
-                lastMelodyNote = myNote
-                NetworkManager.sharedManager.sendNote(lastMelodyNote)
+            if myNote != self.lastMelodyNote {
+                self.lastMelodyNote = myNote
+                NetworkManager.sharedManager.sendNote(self.lastMelodyNote)
             }
         }
     }
@@ -97,11 +145,21 @@ class PlayerViewController: UIViewController {
     @IBAction func didTap(sender: UITapGestureRecognizer) {
         let position = sender.locationInView(sender.view);
         let y = sender.view!.frame.size.height - position.y;
+        var baseNote:Int!
+        var finalNote:Int!
         
         //Base note for left tap is 40, right tap is 70
-        let baseNote = sender.view == self.leftView ? 40 : 70
-        let note = baseNote + Int(y*30/sender.view!.frame.size.height);
-        NetworkManager.sharedManager.sendNote(note);
+        if sender.view == self.leftView {
+            baseNote = 40
+            finalNote = baseNote + Int(y*15/sender.view!.frame.size.height);
+            self.lastBassNote = finalNote
+        } else {
+            baseNote = 70
+            finalNote = baseNote + Int(y*15/sender.view!.frame.size.height);
+            self.lastMelodyNote = finalNote
+        }
+        
+        NetworkManager.sharedManager.sendNote(finalNote);
     }
     /*
     // MARK: - Navigation
