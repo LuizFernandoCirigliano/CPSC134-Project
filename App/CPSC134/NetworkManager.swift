@@ -22,4 +22,22 @@ protocol NetworkManagerProtocol {
 
 class NetworkManager {
     static let sharedManager = UDPNetworkManager.sharedManager
+    
+    static func setLastIP(newIP: String) {
+        NSUserDefaults.standardUserDefaults().setObject(newIP, forKey: "LastIP")
+    }
+    
+    static func getLastIP() -> String {
+        let lastIP = NSUserDefaults.standardUserDefaults().objectForKey("LastIP") ?? "localhost"
+        return lastIP as! String
+    }
+    
+    static func setLastPort(newPort: String) {
+        NSUserDefaults.standardUserDefaults().setObject(newPort, forKey: "LastPort")
+    }
+    
+    static func getLastPort() -> String {
+        let lastPort = NSUserDefaults.standardUserDefaults().objectForKey("LastPort") ?? "9999"
+        return lastPort as! String
+    }
 }

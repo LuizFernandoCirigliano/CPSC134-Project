@@ -19,6 +19,9 @@ class ViewController: UIViewController, NetworkConnectionDelegate, UITextFieldDe
         // Do any additional setup after loading the view, typically from a nib.
         self.portTextField.delegate = self
         self.addressTextField.delegate = self
+        
+        self.portTextField.text = NetworkManager.getLastPort()
+        self.addressTextField.text = NetworkManager.getLastIP()
     }
 
     override func didReceiveMemoryWarning() {
@@ -42,6 +45,9 @@ class ViewController: UIViewController, NetworkConnectionDelegate, UITextFieldDe
         }
         
         do {
+            NetworkManager.setLastIP(address)
+            NetworkManager.setLastPort(port)
+            
             try NetworkManager.sharedManager.connectToServer(address, serverPort: portInt, delegate: self)
         } catch {
             displayErrorMessage("Unable to connect")
@@ -53,7 +59,6 @@ class ViewController: UIViewController, NetworkConnectionDelegate, UITextFieldDe
         let alertController = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .Alert)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
-            // ...
         }
         
         alertController.addAction(cancelAction)
@@ -65,6 +70,7 @@ class ViewController: UIViewController, NetworkConnectionDelegate, UITextFieldDe
     }
     
     func didConnect() {
+        
         NSOperationQueue.mainQueue().addOperationWithBlock {
             self.performSegueWithIdentifier("segueToInstrument", sender: nil)
         }
