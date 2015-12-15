@@ -12,13 +12,15 @@ import SnapKit
 class PlayerViewController: UIViewController {
     var hidingMenu = true
     
+    //The note that is played for the left side on mid-height
     var baseNoteLeft = 48 {
+        //The didSet methods are called every time the value is updated
         didSet {
             leftLabel.text = noteStringForPitch(baseNoteLeft)
             NetworkManager.sharedManager.sendNote(baseNoteLeft)
         }
     }
-    
+    //The note that is played for the right side on mid-height
     var baseNoteRight = 72 {
         didSet {
             rightLabel.text = noteStringForPitch(baseNoteRight)
@@ -26,12 +28,14 @@ class PlayerViewController: UIViewController {
         }
     }
     
+    //Last note played by the left side
     var lastNoteLeft = 48 {
         didSet {
             //Update the label when this value is changed
             leftLabel.text = noteStringForPitch(lastNoteLeft)
         }
     }
+    //Last note played by the right side
     var lastNoteRight = 72 {
         didSet {
             //Update the label when this value is changed
@@ -52,13 +56,15 @@ class PlayerViewController: UIViewController {
         return theView
     }()
     
+    //Create a new label with the default font and text color
     func myDefaultLabel() -> UILabel {
         let theLabel = UILabel()
         theLabel.font = UIFont(name: "Didot", size: 60.0)
         theLabel.textColor = UIColor.whiteColor()
         return theLabel
     }
-
+    
+    //Create and position the label for the left side
     lazy var leftLabel:UILabel = {
         let label = self.myDefaultLabel()
         self.leftView.addSubview(label)
@@ -67,7 +73,7 @@ class PlayerViewController: UIViewController {
         }
         return label
     }()
-    
+    //Create and position the label for the right side
     lazy var rightLabel:UILabel = {
         let label = self.myDefaultLabel()
         self.rightView.addSubview(label)
@@ -77,15 +83,19 @@ class PlayerViewController: UIViewController {
         return label
     }()
     
+    //Create a default stepper to pick the base notes
     func myDefaultStepper() -> UIStepper {
         let stepper = UIStepper()
         stepper.maximumValue = 127
         stepper.minimumValue = 0
         stepper.tintColor = UIColor.whiteColor()
+        //The method that is called whenever the value on the stepper is changed
         stepper.addTarget(self, action: "stepperValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
         stepper.hidden = true
         return stepper
     }
+    
+    //Create and position the stepper below the left label
     lazy var leftStepper:UIStepper = {
         let stepper = self.myDefaultStepper()
         stepper.value = Double(self.baseNoteLeft)
@@ -96,6 +106,8 @@ class PlayerViewController: UIViewController {
         }
         return stepper
     }()
+    
+    //Create and position the stepper below the right label
     lazy var rightStepper:UIStepper = {
         let stepper = self.myDefaultStepper()
         stepper.value = Double(self.baseNoteRight)
@@ -117,13 +129,14 @@ class PlayerViewController: UIViewController {
         return "\(pitchClass)\(octave)"
     }
     
+    //Limit an int to the 0-127 range
     func noteInPitchRange(note: Int) -> Int! {
         if note > 127 {return 127}
         if note < 0 {return 0}
         return note
     }
     
-    func configureGestures() {
+    func configureViews() {
         self.view.addSubview(leftView)
         self.view.addSubview(rightView)
         
@@ -134,22 +147,24 @@ class PlayerViewController: UIViewController {
             make.right.equalTo(self.view.snp_centerX);
             make.bottom.equalTo(self.view.snp_bottom);
         }
-
+        
         rightView.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(self.view.snp_top);
             make.left.equalTo(self.view.snp_centerX);
             make.right.equalTo(self.view.snp_right);
             make.bottom.equalTo(self.view.snp_bottom);
         }
-        
-        //Add pan and tap gesture recognizers to the left(bass) side of the screen
+    }
+    
+    func configureGestures() {
+        //Add pan and tap gesture recognizers to the left side of the screen
         let leftPan = UIPanGestureRecognizer(target: self, action: Selector("didPan:"))
         let leftTap = UITapGestureRecognizer(target: self, action: Selector("didTap:"))
 
         self.leftView.addGestureRecognizer(leftPan)
         self.leftView.addGestureRecognizer(leftTap)
         
-        //Add pan and tap gesture recognizers to the right(melody) side of the screen
+        //Add pan and tap gesture recognizers to the right side of the screen
         let rightPan = UIPanGestureRecognizer(target: self, action: Selector("didPan:"))
         let rightTap = UITapGestureRecognizer(target: self, action: Selector("didTap:"))
         self.rightView.addGestureRecognizer(rightPan)
@@ -164,6 +179,7 @@ class PlayerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureViews()
         configureGestures()
     }
 
@@ -171,13 +187,13 @@ class PlayerViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
-    
+    //This method is called when a pan action happens on the screen
     @IBAction func didPan(sender: UIPanGestureRecognizer) {
         let translation = sender.translationInView(sender.view)
         let yTranslation = -1*translation.y
         let noteChange = Int(yTranslation/48.0)
         
-        //If the touch happened on the left side the notes are lower than the right side
+        //Check which side of the screen the touch was in
         if sender.view == self.leftView {
             let myNote = noteInPitchRange(baseNoteLeft + noteChange)
             if myNote != self.lastNoteLeft {
@@ -192,7 +208,8 @@ class PlayerViewController: UIViewController {
             }
         }
     }
-
+    
+    //This method is called when a tap happens
     @IBAction func didTap(sender: UITapGestureRecognizer) {
         let position = sender.locationInView(sender.view);
         let y = sender.view!.frame.size.height/2 - position.y;
@@ -216,14 +233,4 @@ class PlayerViewController: UIViewController {
             self.baseNoteRight = Int(sender.value)
         }
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
