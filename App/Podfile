@@ -6,6 +6,7 @@ use_frameworks!
 target 'CPSC134' do
 
 pod 'CocoaAsyncSocket'
+pod 'SnapKit', '~> 0.15.0'
 
 end
 
