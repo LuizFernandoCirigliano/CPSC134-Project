@@ -10,39 +10,101 @@ import UIKit
 import SnapKit
 
 class PlayerViewController: UIViewController {
-    var lastBassNote = 72 {
+    var hidingMenu = true
+    
+    var baseNoteLeft = 48 {
         didSet {
-            leftLabel.text = noteStringForPitch(lastBassNote)
+            leftLabel.text = noteStringForPitch(baseNoteLeft)
+            NetworkManager.sharedManager.sendNote(baseNoteLeft)
         }
     }
-    var lastMelodyNote = 72 {
+    
+    var baseNoteRight = 72 {
         didSet {
-            rightLabel.text = noteStringForPitch(lastMelodyNote)
+            rightLabel.text = noteStringForPitch(baseNoteRight)
+            NetworkManager.sharedManager.sendNote(baseNoteRight)
+        }
+    }
+    
+    var lastNoteLeft = 48 {
+        didSet {
+            //Update the label when this value is changed
+            leftLabel.text = noteStringForPitch(lastNoteLeft)
+        }
+    }
+    var lastNoteRight = 72 {
+        didSet {
+            //Update the label when this value is changed
+            rightLabel.text = noteStringForPitch(lastNoteRight)
         }
     }
     
     //Layout setup
-    let leftView:UIView = {
+    lazy var leftView:UIView = {
         let theView = UIView()
         theView.backgroundColor = UIColor.redColor()
         return theView
     }()
-    let rightView:UIView = {
+    
+    lazy var rightView:UIView = {
         let theView = UIView()
         theView.backgroundColor = UIColor.blueColor()
         return theView
     }()
     
-    let leftLabel:UILabel = {
+    func myDefaultLabel() -> UILabel {
         let theLabel = UILabel()
         theLabel.font = UIFont(name: "Didot", size: 60.0)
+        theLabel.textColor = UIColor.whiteColor()
         return theLabel
+    }
+
+    lazy var leftLabel:UILabel = {
+        let label = self.myDefaultLabel()
+        self.leftView.addSubview(label)
+        label.snp_makeConstraints { (make) -> Void in
+            make.center.equalTo(self.leftView)
+        }
+        return label
     }()
     
-    let rightLabel:UILabel = {
-        let theLabel = UILabel()
-        theLabel.font = UIFont(name: "Didot", size: 60.0)
-        return theLabel
+    lazy var rightLabel:UILabel = {
+        let label = self.myDefaultLabel()
+        self.rightView.addSubview(label)
+        label.snp_makeConstraints { (make) -> Void in
+            make.center.equalTo(self.rightView)
+        }
+        return label
+    }()
+    
+    func myDefaultStepper() -> UIStepper {
+        let stepper = UIStepper()
+        stepper.maximumValue = 127
+        stepper.minimumValue = 0
+        stepper.tintColor = UIColor.whiteColor()
+        stepper.addTarget(self, action: "stepperValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
+        stepper.hidden = true
+        return stepper
+    }
+    lazy var leftStepper:UIStepper = {
+        let stepper = self.myDefaultStepper()
+        stepper.value = Double(self.baseNoteLeft)
+        self.leftView.addSubview(stepper)
+        stepper.snp_makeConstraints { (make) -> Void in
+            make.centerX.equalTo(self.leftView)
+            make.top.equalTo(self.leftLabel.snp_bottom)
+        }
+        return stepper
+    }()
+    lazy var rightStepper:UIStepper = {
+        let stepper = self.myDefaultStepper()
+        stepper.value = Double(self.baseNoteRight)
+        self.rightView.addSubview(stepper)
+        stepper.snp_makeConstraints { (make) -> Void in
+            make.centerX.equalTo(self.rightView)
+            make.top.equalTo(self.rightLabel.snp_bottom)
+        }
+        return stepper
     }()
     
     let pitchLetters = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
@@ -50,9 +112,15 @@ class PlayerViewController: UIViewController {
     //Convert a pitch number to Letter + Octave representation
     func noteStringForPitch(pitchNumber: Int!) -> String {
         let pitchClass = pitchLetters[pitchNumber % 12]
-        let octave = (pitchNumber + 3)/12
+        let octave = pitchNumber/12
         
         return "\(pitchClass)\(octave)"
+    }
+    
+    func noteInPitchRange(note: Int) -> Int! {
+        if note > 127 {return 127}
+        if note < 0 {return 0}
+        return note
     }
     
     func configureGestures() {
@@ -74,20 +142,6 @@ class PlayerViewController: UIViewController {
             make.bottom.equalTo(self.view.snp_bottom);
         }
         
-        //Add the visual feedback labels to each view
-        leftLabel.textColor = UIColor.whiteColor()
-        rightLabel.textColor = UIColor.whiteColor()
-        
-        leftView.addSubview(leftLabel)
-        rightView.addSubview(rightLabel)
-        
-        leftLabel.snp_makeConstraints { (make) -> Void in
-            make.center.equalTo(leftView)
-        }
-        rightLabel.snp_makeConstraints { (make) -> Void in
-            make.center.equalTo(rightView)
-        }
-        
         //Add pan and tap gesture recognizers to the left(bass) side of the screen
         let leftPan = UIPanGestureRecognizer(target: self, action: Selector("didPan:"))
         let leftTap = UITapGestureRecognizer(target: self, action: Selector("didTap:"))
@@ -98,8 +152,14 @@ class PlayerViewController: UIViewController {
         //Add pan and tap gesture recognizers to the right(melody) side of the screen
         let rightPan = UIPanGestureRecognizer(target: self, action: Selector("didPan:"))
         let rightTap = UITapGestureRecognizer(target: self, action: Selector("didTap:"))
-        self.rightView.addGestureRecognizer(rightPan);
-        self.rightView.addGestureRecognizer(rightTap);
+        self.rightView.addGestureRecognizer(rightPan)
+        self.rightView.addGestureRecognizer(rightTap)
+    }
+    
+    @IBAction func showHideMenu() {
+        hidingMenu = !hidingMenu
+        self.leftStepper.hidden = hidingMenu
+        self.rightStepper.hidden = hidingMenu
     }
     
     override func viewDidLoad() {
@@ -114,52 +174,47 @@ class PlayerViewController: UIViewController {
     
     @IBAction func didPan(sender: UIPanGestureRecognizer) {
         let translation = sender.translationInView(sender.view)
-        var yTranslation = -1*translation.y
-        
-        //Limit the highest and lowest notes that can be played
-        if yTranslation > 480 {
-            yTranslation = 480
-        }
-        if yTranslation < -480 {
-            yTranslation = -480
-        }
-        
+        let yTranslation = -1*translation.y
         let noteChange = Int(yTranslation/48.0)
         
         //If the touch happened on the left side the notes are lower than the right side
         if sender.view == self.leftView {
-            let myNote = 48 + noteChange
-            if myNote != self.lastBassNote {
-                self.lastBassNote = myNote
-                NetworkManager.sharedManager.sendNote(self.lastBassNote)
+            let myNote = noteInPitchRange(baseNoteLeft + noteChange)
+            if myNote != self.lastNoteLeft {
+                self.lastNoteLeft = myNote
+                NetworkManager.sharedManager.sendNote(self.lastNoteLeft)
             }
         } else {
-            let myNote = 72 + noteChange
-            if myNote != self.lastMelodyNote {
-                self.lastMelodyNote = myNote
-                NetworkManager.sharedManager.sendNote(self.lastMelodyNote)
+            let myNote = noteInPitchRange(baseNoteRight + noteChange)
+            if myNote != self.lastNoteRight {
+                self.lastNoteRight = myNote
+                NetworkManager.sharedManager.sendNote(self.lastNoteRight)
             }
         }
     }
 
     @IBAction func didTap(sender: UITapGestureRecognizer) {
         let position = sender.locationInView(sender.view);
-        let y = sender.view!.frame.size.height - position.y;
-        var baseNote:Int!
+        let y = sender.view!.frame.size.height/2 - position.y;
         var finalNote:Int!
         
-        //Base note for left tap is 40, right tap is 70
         if sender.view == self.leftView {
-            baseNote = 40
-            finalNote = baseNote + Int(y*15/sender.view!.frame.size.height);
-            self.lastBassNote = finalNote
+            finalNote = noteInPitchRange(baseNoteLeft + Int(y*15/sender.view!.frame.size.height))
+            self.lastNoteLeft = finalNote
         } else {
-            baseNote = 70
-            finalNote = baseNote + Int(y*15/sender.view!.frame.size.height);
-            self.lastMelodyNote = finalNote
+            finalNote = noteInPitchRange(baseNoteRight + Int(y*15/sender.view!.frame.size.height))
+            self.lastNoteRight = finalNote
         }
         
-        NetworkManager.sharedManager.sendNote(finalNote);
+        NetworkManager.sharedManager.sendNote(finalNote)
+    }
+    
+    func stepperValueChanged(sender: UIStepper) {
+        if sender.superview == self.leftView {
+            self.baseNoteLeft = Int(sender.value)
+        } else {
+            self.baseNoteRight = Int(sender.value)
+        }
     }
     /*
     // MARK: - Navigation

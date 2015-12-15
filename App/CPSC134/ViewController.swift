@@ -33,7 +33,6 @@ class ViewController: UIViewController, NetworkConnectionDelegate, UITextFieldDe
         let address = self.addressTextField.text ?? ""
         let port = self.portTextField.text ?? ""
         
-        
         guard !address.isEmpty else {
             displayErrorMessage("Please add a valid server address.")
             return;
@@ -70,7 +69,6 @@ class ViewController: UIViewController, NetworkConnectionDelegate, UITextFieldDe
     }
     
     func didConnect() {
-        
         NSOperationQueue.mainQueue().addOperationWithBlock {
             self.performSegueWithIdentifier("segueToInstrument", sender: nil)
         }
