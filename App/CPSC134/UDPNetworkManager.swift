@@ -42,13 +42,31 @@ class UDPNetworkManager: NetworkManagerProtocol, GCDAsyncUdpSocketDelegate {
         self.socket.sendData(data, toHost: self.serverIP, port: self.serverPort, withTimeout: 3, tag: 0)
     }
     
-    func sendNote(note: Int) {
+    func sendInstrument(instrument: Int, channel: Int) {
         do {
-            try sendString("\(note)")
+            try sendString("i/\(instrument)/\(channel)")
+        } catch {
+            print("\(error)")
+            print("Erro enviando instrumento")
+        }
+    }
+    
+    func sendNote(note: Int, duration: Int, channel: Int) {
+        do {
+            try sendString("n/\(note)/\(duration)/\(channel)")
         } catch {
             print("\(error)")
             print("Erro enviando nota")
         }
+    }
+    func sendNote(note: Int, duration: Int) {
+        self.sendNote(note, duration: duration, channel: 0)
+    }
+    func sendNote(note: Int, channel: Int) {
+        self.sendNote(note, duration: 500, channel: channel)
+    }
+    func sendNote(note: Int) {
+        self.sendNote(note, duration: 500)
     }
     
     @objc func udpSocket(sock: GCDAsyncUdpSocket!, didConnectToAddress address: NSData!) {

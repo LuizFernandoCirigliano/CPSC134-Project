@@ -9,7 +9,9 @@
 import UIKit
 import SnapKit
 
-class PlayerViewController: UIViewController {
+class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+    let instruments = ["PIANO", "BRIGHT_ACOUSTIC", "ELECTRIC_GRAND", "HONKYTONK_PIANO", "EPIANO1", "EPIANO2", "HARPSICHORD", "CLAVINET", "CELESTA", "GLOCKENSPIEL", "MUSIC_BOX", "VIBRAPHONE=", "MARIMBA", "XYLOPHONE", "TUBULAR_BELLS", "DULCIMER", "DRAWBAR_ORGAN", "PERCUSSIVE_ORGAN", "ROCK_ORGAN", "CHURCH_ORGAN", "REED_ORGAN", "ACCORDION", "HARMONICA", "TANGO_ACCORDION", "NYLON_GUITAR", "STEEL_GUITAR", "JAZZ_GUITAR", "CLEAN_GUITAR", "MUTED_GUITAR", "OVERDRIVEN_GUITAR", "DISTORTION_GUITAR", "GUITAR_HARMONICS", "ACOUSTIC_BASS", "BASS", "PICKED_BASS", "FRETLESS_BASS", "SLAP_BASS1", "SLAP_BASS2", "SYNTH_BASS1", "SYNTH_BASS2", "VIOLIN", "VIOLA", "CELLO", "CONTRABASS", "TREMOLO_STRINGS", "PIZZICATO_STRINGS", "ORCHESTRAL_HARP", "TIMPANI", "STRING_ENSEMBLE1", "STRING_ENSEMBLE2", "SYNTH_STRINGS1", "SYNTH_STRINGS2", "CHOIR", "VOICE", "SYNTH_VOICE", "ORCHESTRA_HIT", "TRUMPET", "TROMBONE", "TUBA", "MUTED_TRUMPET", "HORN", "BRASS", "SYNTH_BRASS1", "SYNTH_BRASS2", "SOPRANO_SAX", "ALTO_SAX", "TENOR_SAX", "BARITONE_SAX", "OBOE", "ENGLISH_HORN", "BASSOON", "CLARINET", "PICCOLO", "FLUTE", "RECORDER", "PAN_FLUTE", "BOTTLE", "SHAKUHACHI", "WHISTLE", "OCARINA", "SQUARE", "SAWTOOTH", "CALLIOPE", "CHIFF", "CHARANG", "SOLO_VOX", "FIFTHS", "BASS_LEAD", "NEW_AGE", "WARM_PAD", "POLYSYNTH", "SPACE_VOICE", "BOWED_GLASS", "METALLIC", "HALO", "SWEEP", "ICE_RAIN", "SOUNDTRACK", "CRYSTAL", "ATMOSPHERE", "BRIGHTNESS", "GOBLINS", "ECHO_DROPS", "SCI_FI", "SITAR", "BANJO", "SHAMISEN", "KOTO", "KALIMBA", "BAGPIPE", "FIDDLE", "SHANNAI", "BELL", "AGOGO", "STEEL_DRUMS", "WOODBLOCK", "TAIKO", "TOM_TOM", "SYNTH_DRUM", "REVERSE_CYMBAL", "FRET_NOISE", "BREATH", "SEA", "BIRD", "TELEPHONE", "HELICOPTER", "APPLAUSE", "GUNSHOT"]
+    
     var hidingMenu = true
     
     //The note that is played for the left side on mid-height
@@ -17,14 +19,14 @@ class PlayerViewController: UIViewController {
         //The didSet methods are called every time the value is updated
         didSet {
             leftLabel.text = noteStringForPitch(baseNoteLeft)
-            NetworkManager.sharedManager.sendNote(baseNoteLeft)
+            NetworkManager.sharedManager.sendNote(baseNoteLeft, channel: 0)
         }
     }
     //The note that is played for the right side on mid-height
     var baseNoteRight = 72 {
         didSet {
             rightLabel.text = noteStringForPitch(baseNoteRight)
-            NetworkManager.sharedManager.sendNote(baseNoteRight)
+            NetworkManager.sharedManager.sendNote(baseNoteRight, channel: 1)
         }
     }
     
@@ -94,7 +96,6 @@ class PlayerViewController: UIViewController {
         stepper.hidden = true
         return stepper
     }
-    
     //Create and position the stepper below the left label
     lazy var leftStepper:UIStepper = {
         let stepper = self.myDefaultStepper()
@@ -106,7 +107,6 @@ class PlayerViewController: UIViewController {
         }
         return stepper
     }()
-    
     //Create and position the stepper below the right label
     lazy var rightStepper:UIStepper = {
         let stepper = self.myDefaultStepper()
@@ -119,6 +119,35 @@ class PlayerViewController: UIViewController {
         return stepper
     }()
     
+    func myDefaultPicker() -> UIPickerView {
+        let picker = UIPickerView()
+        picker.delegate = self
+        picker.dataSource = self
+        picker.hidden = true
+        picker.tintColor = UIColor.whiteColor()
+
+        return picker
+    }
+    lazy var leftInstrumentPicker:UIPickerView = {
+        let picker = self.myDefaultPicker()
+        self.leftView.addSubview(picker)
+        picker.snp_makeConstraints { (make) -> Void in
+            make.centerX.equalTo(self.leftView)
+            make.top.equalTo(self.leftStepper.snp_bottom).offset(-42)
+        }
+        return picker
+    }()
+
+    lazy var rightInstrumentPicker:UIPickerView = {
+        let picker = self.myDefaultPicker()
+        self.rightView.addSubview(picker)
+        picker.snp_makeConstraints { (make) -> Void in
+            make.centerX.equalTo(self.rightView)
+            make.top.equalTo(self.rightStepper.snp_bottom).offset(-42)
+        }
+        return picker
+    }()
+
     let pitchLetters = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
     
     //Convert a pitch number to Letter + Octave representation
@@ -160,7 +189,6 @@ class PlayerViewController: UIViewController {
         //Add pan and tap gesture recognizers to the left side of the screen
         let leftPan = UIPanGestureRecognizer(target: self, action: Selector("didPan:"))
         let leftTap = UITapGestureRecognizer(target: self, action: Selector("didTap:"))
-
         self.leftView.addGestureRecognizer(leftPan)
         self.leftView.addGestureRecognizer(leftTap)
         
@@ -175,6 +203,8 @@ class PlayerViewController: UIViewController {
         hidingMenu = !hidingMenu
         self.leftStepper.hidden = hidingMenu
         self.rightStepper.hidden = hidingMenu
+        self.rightInstrumentPicker.hidden = hidingMenu
+        self.leftInstrumentPicker.hidden = hidingMenu
     }
     
     override func viewDidLoad() {
@@ -189,6 +219,7 @@ class PlayerViewController: UIViewController {
     
     //This method is called when a pan action happens on the screen
     @IBAction func didPan(sender: UIPanGestureRecognizer) {
+        let defaultPanNoteDuration = 200
         let translation = sender.translationInView(sender.view)
         let yTranslation = -1*translation.y
         let noteChange = Int(yTranslation/48.0)
@@ -198,13 +229,13 @@ class PlayerViewController: UIViewController {
             let myNote = noteInPitchRange(baseNoteLeft + noteChange)
             if myNote != self.lastNoteLeft {
                 self.lastNoteLeft = myNote
-                NetworkManager.sharedManager.sendNote(self.lastNoteLeft)
+                NetworkManager.sharedManager.sendNote(self.lastNoteLeft, duration: defaultPanNoteDuration, channel:0)
             }
         } else {
             let myNote = noteInPitchRange(baseNoteRight + noteChange)
             if myNote != self.lastNoteRight {
                 self.lastNoteRight = myNote
-                NetworkManager.sharedManager.sendNote(self.lastNoteRight)
+                NetworkManager.sharedManager.sendNote(self.lastNoteRight, duration: defaultPanNoteDuration, channel:1)
             }
         }
     }
@@ -213,24 +244,49 @@ class PlayerViewController: UIViewController {
     @IBAction func didTap(sender: UITapGestureRecognizer) {
         let position = sender.locationInView(sender.view);
         let y = sender.view!.frame.size.height/2 - position.y;
+        let x = position.x / sender.view!.frame.size.width
+        let duration = Int(x*2000)
+        
         var finalNote:Int!
+        var channel:Int!
         
         if sender.view == self.leftView {
             finalNote = noteInPitchRange(baseNoteLeft + Int(y*15/sender.view!.frame.size.height))
+            channel = 0
             self.lastNoteLeft = finalNote
         } else {
             finalNote = noteInPitchRange(baseNoteRight + Int(y*15/sender.view!.frame.size.height))
+            channel = 1
             self.lastNoteRight = finalNote
         }
         
-        NetworkManager.sharedManager.sendNote(finalNote)
+        NetworkManager.sharedManager.sendNote(finalNote, duration: duration, channel: channel)
     }
     
+    //MARK: Stepper Delegate
     func stepperValueChanged(sender: UIStepper) {
         if sender.superview == self.leftView {
             self.baseNoteLeft = Int(sender.value)
         } else {
             self.baseNoteRight = Int(sender.value)
         }
+    }
+    
+    //MARK: Picker DataSource/Delegate
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return self.instruments.count
+    }
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let channel = pickerView == self.leftInstrumentPicker ? 0 : 1
+        let lastNote = channel == 0 ? self.lastNoteLeft : self.lastNoteRight
+        NetworkManager.sharedManager.sendInstrument(row, channel: channel)
+        NetworkManager.sharedManager.sendNote(lastNote, channel: channel)
+    }
+    func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        let string = self.instruments[row]
+        return NSAttributedString(string: string, attributes: [NSForegroundColorAttributeName:UIColor.whiteColor()])
     }
 }
