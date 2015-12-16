@@ -134,6 +134,7 @@ class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         picker.snp_makeConstraints { (make) -> Void in
             make.centerX.equalTo(self.leftView)
             make.top.equalTo(self.leftLabel.snp_bottom)
+            make.bottom.equalTo(self.leftView.snp_bottom)
         }
         return picker
     }()
@@ -144,6 +145,7 @@ class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         picker.snp_makeConstraints { (make) -> Void in
             make.centerX.equalTo(self.rightView)
             make.top.equalTo(self.rightLabel.snp_bottom)
+            make.bottom.equalTo(self.rightView.snp_bottom)
         }
         return picker
     }()

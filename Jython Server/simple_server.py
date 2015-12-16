@@ -10,45 +10,25 @@ class MyUDPHandler(SocketServer.BaseRequestHandler):
     """
 
     def handle(self):
+        #Get the string sent and remove leading and trailing spaces
         data = self.request[0].strip()
+        #Split the string into a list of parameters
         params = data.split('/')
+        #Check the first parameter for what operation to do
+    
         if params[0] == 'n':
             Play.note(int(params[1]), 0, float(params[2]), 127, int(params[3]))
-        elif params[0] =='b':
+        elif params[0] == 'b':
             Play.noteOn(int(params[1]), 100, int(params[2]))
         elif params[0] == 'e':
             Play.noteOff(int(params[1]), int(params[2]))
         elif params[0] == 'i':
             Play.setInstrument(int(params[1]), int(params[2]))
-        socket = self.request[1]
+            
         print "{} wrote:".format(self.client_address[0])
         print data
-        socket.sendto(data.upper(), self.client_address)
-
-
-class MyTCPHandler(SocketServer.BaseRequestHandler):
-    """
-    The RequestHandler class for our server.
-
-    It is instantiated once per connection to the server, and must
-    override the handle() method to implement communication to the
-    client.
-    """
-
-    def handle(self):
-        # self.request is the TCP socket connected to the client
-        self.data = self.request.recv(1024).strip()
-        params = self.data.split('/')
-        Play.note(int(params[0]), 0, int(params[1]), 127, 0)
-
-        print "{} wrote:".format(self.client_address[0])
-        print self.data
-        # just send back the same data, but upper-cased
-#        self.request.sendall(self.data.upper())
-
 
 if __name__ == "__main__":
     HOST, PORT = "0.0.0.0", 9999
     server = SocketServer.UDPServer((HOST, PORT), MyUDPHandler)
-#    server = SocketServer.TCPServer((HOST, PORT), MyTCPHandler)
     server.serve_forever()
