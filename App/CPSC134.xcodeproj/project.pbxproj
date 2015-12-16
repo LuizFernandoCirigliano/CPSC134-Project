@@ -14,7 +14,6 @@
 		3A86223C1C06A5E8002A113E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A86223A1C06A5E8002A113E /* LaunchScreen.storyboard */; };
 		3A8622441C06A6E8002A113E /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8622431C06A6E8002A113E /* NetworkManager.swift */; };
 		3A8622461C06EAB9002A113E /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8622451C06EAB9002A113E /* PlayerViewController.swift */; };
-		3A8622481C06EFA2002A113E /* TCPNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8622471C06EFA2002A113E /* TCPNetworkManager.swift */; };
 		3A86224A1C06EFAB002A113E /* UDPNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8622491C06EFAB002A113E /* UDPNetworkManager.swift */; };
 		CD99F4F0D409E1C1BFDD985A /* Pods_CPSC134.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9D48C46A9C87B8EA6FC7BA /* Pods_CPSC134.framework */; };
 /* End PBXBuildFile section */
@@ -30,7 +29,6 @@
 		3A86223D1C06A5E8002A113E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A8622431C06A6E8002A113E /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		3A8622451C06EAB9002A113E /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
-		3A8622471C06EFA2002A113E /* TCPNetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPNetworkManager.swift; sourceTree = "<group>"; };
 		3A8622491C06EFAB002A113E /* UDPNetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UDPNetworkManager.swift; sourceTree = "<group>"; };
 		54C5C30AD5F7132FA2EB07C5 /* Pods-CPSC134.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CPSC134.release.xcconfig"; path = "Pods/Target Support Files/Pods-CPSC134/Pods-CPSC134.release.xcconfig"; sourceTree = "<group>"; };
 		DE9D48C46A9C87B8EA6FC7BA /* Pods_CPSC134.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CPSC134.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,7 +71,6 @@
 				3A8622331C06A5E8002A113E /* ViewController.swift */,
 				3A8622451C06EAB9002A113E /* PlayerViewController.swift */,
 				3A8622431C06A6E8002A113E /* NetworkManager.swift */,
-				3A8622471C06EFA2002A113E /* TCPNetworkManager.swift */,
 				3A8622491C06EFAB002A113E /* UDPNetworkManager.swift */,
 				3A8622351C06A5E8002A113E /* Main.storyboard */,
 				3A8622381C06A5E8002A113E /* Assets.xcassets */,
@@ -227,7 +224,6 @@
 				3A86224A1C06EFAB002A113E /* UDPNetworkManager.swift in Sources */,
 				3A8622341C06A5E8002A113E /* ViewController.swift in Sources */,
 				3A8622321C06A5E8002A113E /* AppDelegate.swift in Sources */,
-				3A8622481C06EFA2002A113E /* TCPNetworkManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
