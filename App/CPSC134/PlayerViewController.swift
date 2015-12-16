@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
-    let instruments = ["PIANO", "BRIGHT_ACOUSTIC", "ELECTRIC_GRAND", "HONKYTONK_PIANO", "EPIANO1", "EPIANO2", "HARPSICHORD", "CLAVINET", "CELESTA", "GLOCKENSPIEL", "MUSIC_BOX", "VIBRAPHONE=", "MARIMBA", "XYLOPHONE", "TUBULAR_BELLS", "DULCIMER", "DRAWBAR_ORGAN", "PERCUSSIVE_ORGAN", "ROCK_ORGAN", "CHURCH_ORGAN", "REED_ORGAN", "ACCORDION", "HARMONICA", "TANGO_ACCORDION", "NYLON_GUITAR", "STEEL_GUITAR", "JAZZ_GUITAR", "CLEAN_GUITAR", "MUTED_GUITAR", "OVERDRIVEN_GUITAR", "DISTORTION_GUITAR", "GUITAR_HARMONICS", "ACOUSTIC_BASS", "BASS", "PICKED_BASS", "FRETLESS_BASS", "SLAP_BASS1", "SLAP_BASS2", "SYNTH_BASS1", "SYNTH_BASS2", "VIOLIN", "VIOLA", "CELLO", "CONTRABASS", "TREMOLO_STRINGS", "PIZZICATO_STRINGS", "ORCHESTRAL_HARP", "TIMPANI", "STRING_ENSEMBLE1", "STRING_ENSEMBLE2", "SYNTH_STRINGS1", "SYNTH_STRINGS2", "CHOIR", "VOICE", "SYNTH_VOICE", "ORCHESTRA_HIT", "TRUMPET", "TROMBONE", "TUBA", "MUTED_TRUMPET", "HORN", "BRASS", "SYNTH_BRASS1", "SYNTH_BRASS2", "SOPRANO_SAX", "ALTO_SAX", "TENOR_SAX", "BARITONE_SAX", "OBOE", "ENGLISH_HORN", "BASSOON", "CLARINET", "PICCOLO", "FLUTE", "RECORDER", "PAN_FLUTE", "BOTTLE", "SHAKUHACHI", "WHISTLE", "OCARINA", "SQUARE", "SAWTOOTH", "CALLIOPE", "CHIFF", "CHARANG", "SOLO_VOX", "FIFTHS", "BASS_LEAD", "NEW_AGE", "WARM_PAD", "POLYSYNTH", "SPACE_VOICE", "BOWED_GLASS", "METALLIC", "HALO", "SWEEP", "ICE_RAIN", "SOUNDTRACK", "CRYSTAL", "ATMOSPHERE", "BRIGHTNESS", "GOBLINS", "ECHO_DROPS", "SCI_FI", "SITAR", "BANJO", "SHAMISEN", "KOTO", "KALIMBA", "BAGPIPE", "FIDDLE", "SHANNAI", "BELL", "AGOGO", "STEEL_DRUMS", "WOODBLOCK", "TAIKO", "TOM_TOM", "SYNTH_DRUM", "REVERSE_CYMBAL", "FRET_NOISE", "BREATH", "SEA", "BIRD", "TELEPHONE", "HELICOPTER", "APPLAUSE", "GUNSHOT"]
+    let instruments = ["PIANO", "BRIGHT_ACOUSTIC", "ELECTRIC_GRAND", "HONKYTONK_PIANO", "EPIANO1", "EPIANO2", "HARPSICHORD", "CLAVINET", "CELESTA", "GLOCKENSPIEL", "MUSIC_BOX", "VIBRAPHONE", "MARIMBA", "XYLOPHONE", "TUBULAR_BELLS", "DULCIMER", "DRAWBAR_ORGAN", "PERCUSSIVE_ORGAN", "ROCK_ORGAN", "CHURCH_ORGAN", "REED_ORGAN", "ACCORDION", "HARMONICA", "TANGO_ACCORDION", "NYLON_GUITAR", "STEEL_GUITAR", "JAZZ_GUITAR", "CLEAN_GUITAR", "MUTED_GUITAR", "OVERDRIVEN_GUITAR", "DISTORTION_GUITAR", "GUITAR_HARMONICS", "ACOUSTIC_BASS", "BASS", "PICKED_BASS", "FRETLESS_BASS", "SLAP_BASS1", "SLAP_BASS2", "SYNTH_BASS1", "SYNTH_BASS2", "VIOLIN", "VIOLA", "CELLO", "CONTRABASS", "TREMOLO_STRINGS", "PIZZICATO_STRINGS", "ORCHESTRAL_HARP", "TIMPANI", "STRING_ENSEMBLE1", "STRING_ENSEMBLE2", "SYNTH_STRINGS1", "SYNTH_STRINGS2", "CHOIR", "VOICE", "SYNTH_VOICE", "ORCHESTRA_HIT", "TRUMPET", "TROMBONE", "TUBA", "MUTED_TRUMPET", "HORN", "BRASS", "SYNTH_BRASS1", "SYNTH_BRASS2", "SOPRANO_SAX", "ALTO_SAX", "TENOR_SAX", "BARITONE_SAX", "OBOE", "ENGLISH_HORN", "BASSOON", "CLARINET", "PICCOLO", "FLUTE", "RECORDER", "PAN_FLUTE", "BOTTLE", "SHAKUHACHI", "WHISTLE", "OCARINA", "SQUARE", "SAWTOOTH", "CALLIOPE", "CHIFF", "CHARANG", "SOLO_VOX", "FIFTHS", "BASS_LEAD", "NEW_AGE", "WARM_PAD", "POLYSYNTH", "SPACE_VOICE", "BOWED_GLASS", "METALLIC", "HALO", "SWEEP", "ICE_RAIN", "SOUNDTRACK", "CRYSTAL", "ATMOSPHERE", "BRIGHTNESS", "GOBLINS", "ECHO_DROPS", "SCI_FI", "SITAR", "BANJO", "SHAMISEN", "KOTO", "KALIMBA", "BAGPIPE", "FIDDLE", "SHANNAI", "BELL", "AGOGO", "STEEL_DRUMS", "WOODBLOCK", "TAIKO", "TOM_TOM", "SYNTH_DRUM", "REVERSE_CYMBAL", "FRET_NOISE", "BREATH", "SEA", "BIRD", "TELEPHONE", "HELICOPTER", "APPLAUSE", "GUNSHOT"]
     
     var hidingMenu = true
     
@@ -103,7 +103,7 @@ class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         self.leftView.addSubview(stepper)
         stepper.snp_makeConstraints { (make) -> Void in
             make.centerX.equalTo(self.leftView)
-            make.top.equalTo(self.leftLabel.snp_bottom)
+            make.bottom.equalTo(self.leftLabel.snp_top)
         }
         return stepper
     }()
@@ -114,7 +114,7 @@ class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         self.rightView.addSubview(stepper)
         stepper.snp_makeConstraints { (make) -> Void in
             make.centerX.equalTo(self.rightView)
-            make.top.equalTo(self.rightLabel.snp_bottom)
+            make.bottom.equalTo(self.rightLabel.snp_top)
         }
         return stepper
     }()
@@ -133,7 +133,7 @@ class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         self.leftView.addSubview(picker)
         picker.snp_makeConstraints { (make) -> Void in
             make.centerX.equalTo(self.leftView)
-            make.top.equalTo(self.leftStepper.snp_bottom).offset(-42)
+            make.top.equalTo(self.leftLabel.snp_bottom)
         }
         return picker
     }()
@@ -143,7 +143,7 @@ class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         self.rightView.addSubview(picker)
         picker.snp_makeConstraints { (make) -> Void in
             make.centerX.equalTo(self.rightView)
-            make.top.equalTo(self.rightStepper.snp_bottom).offset(-42)
+            make.top.equalTo(self.rightLabel.snp_bottom)
         }
         return picker
     }()
@@ -189,14 +189,18 @@ class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         //Add pan and tap gesture recognizers to the left side of the screen
         let leftPan = UIPanGestureRecognizer(target: self, action: Selector("didPan:"))
         let leftTap = UITapGestureRecognizer(target: self, action: Selector("didTap:"))
+        let leftPress = UILongPressGestureRecognizer(target: self, action: Selector("didLongPress:"))
         self.leftView.addGestureRecognizer(leftPan)
         self.leftView.addGestureRecognizer(leftTap)
+        self.leftView.addGestureRecognizer(leftPress)
         
         //Add pan and tap gesture recognizers to the right side of the screen
         let rightPan = UIPanGestureRecognizer(target: self, action: Selector("didPan:"))
         let rightTap = UITapGestureRecognizer(target: self, action: Selector("didTap:"))
+        let rightPress = UILongPressGestureRecognizer(target: self, action: Selector("didLongPress:"))
         self.rightView.addGestureRecognizer(rightPan)
         self.rightView.addGestureRecognizer(rightTap)
+        self.rightView.addGestureRecognizer(rightPress)
     }
     
     @IBAction func showHideMenu() {
@@ -218,7 +222,7 @@ class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     }
     
     //This method is called when a pan action happens on the screen
-    @IBAction func didPan(sender: UIPanGestureRecognizer) {
+    func didPan(sender: UIPanGestureRecognizer) {
         let defaultPanNoteDuration = 200
         let translation = sender.translationInView(sender.view)
         let yTranslation = -1*translation.y
@@ -240,8 +244,40 @@ class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         }
     }
     
+
     //This method is called when a tap happens
-    @IBAction func didTap(sender: UITapGestureRecognizer) {
+    func didLongPress(sender: UITapGestureRecognizer) {
+        let position = sender.locationInView(sender.view);
+        let y = sender.view!.frame.size.height/2 - position.y;
+        
+        var finalNote:Int!
+        let channel = sender.view == self.leftView ? 0 : 1
+        let baseNote = channel == 0 ? self.baseNoteLeft : self.baseNoteRight
+        let lastNote = channel == 0 ? self.lastNoteLeft : self.lastNoteRight
+        
+        if sender.state == .Ended {
+            NetworkManager.sharedManager.sendNoteOff(lastNote, channel: channel)
+        } else {
+            finalNote = noteInPitchRange(baseNote + Int(y*15/sender.view!.frame.size.height))
+            
+            if sender.state == .Changed {
+                if lastNote == finalNote {
+                    return
+                } else {
+                    NetworkManager.sharedManager.sendNoteOff(lastNote, channel: channel)
+                }
+            }
+            
+            if channel == 0 {
+                self.lastNoteLeft = finalNote
+            } else {
+                self.lastNoteRight = finalNote
+            }
+            NetworkManager.sharedManager.sendNoteOn(finalNote, channel: channel)
+        }
+    }
+    //This method is called when a tap happens
+    func didTap(sender: UITapGestureRecognizer) {
         let position = sender.locationInView(sender.view);
         let y = sender.view!.frame.size.height/2 - position.y;
         let x = position.x / sender.view!.frame.size.width

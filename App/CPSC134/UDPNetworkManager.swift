@@ -51,6 +51,24 @@ class UDPNetworkManager: NetworkManagerProtocol, GCDAsyncUdpSocketDelegate {
         }
     }
     
+    func sendNoteOn(note: Int, channel: Int) {
+        do {
+            try sendString("b/\(note)/\(channel)")
+        } catch {
+            print("\(error)")
+            print("Erro enviando nota")
+        }
+    }
+    
+    func sendNoteOff(note: Int, channel: Int) {
+        do {
+            try sendString("e/\(note)/\(channel)")
+        } catch {
+            print("\(error)")
+            print("Erro enviando nota")
+        }
+    }
+    
     func sendNote(note: Int, duration: Int, channel: Int) {
         do {
             try sendString("n/\(note)/\(duration)/\(channel)")

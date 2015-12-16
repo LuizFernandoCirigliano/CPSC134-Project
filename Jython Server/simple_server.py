@@ -11,7 +11,15 @@ class MyUDPHandler(SocketServer.BaseRequestHandler):
 
     def handle(self):
         data = self.request[0].strip()
-        Play.note(int(data), 0, 100, 127, 0)
+        params = data.split('/')
+        if params[0] == 'n':
+            Play.note(int(params[1]), 0, float(params[2]), 127, int(params[3]))
+        elif params[0] =='b':
+            Play.noteOn(int(params[1]), 100, int(params[2]))
+        elif params[0] == 'e':
+            Play.noteOff(int(params[1]), int(params[2]))
+        elif params[0] == 'i':
+            Play.setInstrument(int(params[1]), int(params[2]))
         socket = self.request[1]
         print "{} wrote:".format(self.client_address[0])
         print data
@@ -30,7 +38,8 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         # self.request is the TCP socket connected to the client
         self.data = self.request.recv(1024).strip()
-        Play.note(int(self.data), 0, 100, 127, 0)
+        params = self.data.split('/')
+        Play.note(int(params[0]), 0, int(params[1]), 127, 0)
 
         print "{} wrote:".format(self.client_address[0])
         print self.data
