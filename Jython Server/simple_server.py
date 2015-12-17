@@ -3,19 +3,14 @@ from music import *
 
 class MyUDPHandler(SocketServer.BaseRequestHandler):
     """
-    This class works similar to the TCP handler class, except that
-    self.request consists of a pair of data and client socket, and since
-    there is no connection the client address must be given explicitly
-    when sending data back via sendto().
+    This method is called whenever a new UDP message is received.
     """
-
     def handle(self):
         #Get the string sent and remove leading and trailing spaces
         data = self.request[0].strip()
         #Split the string into a list of parameters
         params = data.split('/')
         #Check the first parameter for what operation to do
-    
         if params[0] == 'n':
             Play.note(int(params[1]), 0, float(params[2]), 127, int(params[3]))
         elif params[0] == 'b':

@@ -45,13 +45,12 @@ class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         }
     }
     
-    //Layout setup
+    //Create the Blue and Red background views
     lazy var leftView:UIView = {
         let theView = UIView()
         theView.backgroundColor = UIColor.redColor()
         return theView
     }()
-    
     lazy var rightView:UIView = {
         let theView = UIView()
         theView.backgroundColor = UIColor.blueColor()
@@ -138,7 +137,6 @@ class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         }
         return picker
     }()
-
     lazy var rightInstrumentPicker:UIPickerView = {
         let picker = self.myDefaultPicker()
         self.rightView.addSubview(picker)
@@ -245,14 +243,12 @@ class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             }
         }
     }
-    
 
     //This method is called when a tap happens
     func didLongPress(sender: UITapGestureRecognizer) {
         let position = sender.locationInView(sender.view);
         let y = sender.view!.frame.size.height/2 - position.y;
-        
-        var finalNote:Int!
+
         let channel = sender.view == self.leftView ? 0 : 1
         let baseNote = channel == 0 ? self.baseNoteLeft : self.baseNoteRight
         let lastNote = channel == 0 ? self.lastNoteLeft : self.lastNoteRight
@@ -260,7 +256,7 @@ class PlayerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         if sender.state == .Ended {
             NetworkManager.sharedManager.sendNoteOff(lastNote, channel: channel)
         } else {
-            finalNote = noteInPitchRange(baseNote + Int(y*15/sender.view!.frame.size.height))
+            let finalNote = noteInPitchRange(baseNote + Int(y*15/sender.view!.frame.size.height))
             
             if sender.state == .Changed {
                 if lastNote == finalNote {
